@@ -26,7 +26,9 @@ COMPILE:=$(CC) $(CFLAGS) $(DFLAGS)
 
 # files
 
-CODE_FILES := $(wildcard src/*.c src/*.h tests/*.c tests/*.h)
+INCLUDE_DIRS += -Iinclude
+
+CODE_FILES := $(wildcard src/*.c include/*.h tests/*.c tests/*.h)
 SRC_OBJ_FILES := $(patsubst src/%.c, build/src/%.o, $(wildcard src/*.c))
 # targets
 
@@ -41,7 +43,7 @@ build/tests/%.o: tests/%.c $(CODE_FILES) | build
 	$(COMPILE) -c -o $@ $<
 
 test_error: liberror.a | build
-	$(COMPILE) -o $@ tests/test_error.c $(LDFLAGS)
+	$(COMPILE) $(INCLUDE_DIRS) -o $@ tests/test_error.c $(LDFLAGS)
 
 tests: test_error
 	./test_error
@@ -54,14 +56,14 @@ build:
 
 # phony targets
 
-install: liberror.a src/error.h
-	install -d /usr/local/lib /usr/local/include
+install: liberror.a include/error.h
+	install -d $(INSTALL_PREFIX)/lib $(INSTALL_PREFIX)/include
 	# Octal permissions: 6 = rw-, 4 = r--
-	install -m 644 liberror.a /usr/local/lib
-	install -m 644 src/error.h /usr/local/include
+	install -m 644 liberror.a $(INSTALL_PREFIX)/lib
+	install -m 644 include/error.h $(INSTALL_PREFIX)/include
 
 uninstall:
-	rm -f /usr/local/lib/liberror.a /usr/local/include/error.h
+	rm -f $(INSTALL_PREFIX)/lib/liberror.a $(INSTALL_PREFIX)/include/error.h
 
 clean:
 	rm -f test_error
