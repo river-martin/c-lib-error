@@ -6,13 +6,15 @@
 
 ## Installation
 
-To install `c-lib-error` to `/usr/local/`, clone the repository and run `sudo make install`.
+To install `liberror.a` and its header files to `/usr/local`, run the commands below.
 
 ```sh
 git clone https://github.com/river-martin/c-lib-error.git
 cd c-lib-error
-sudo make install
+sudo INSTALL_PREFIX=/usr/local make install # sudo is required to write file to /usr/local
 ```
+
+To install to a different directory, set `INSTALL_PREFIX` to something else. If your user has write permission for `$INSTALL_PREFIX`, you don't need to use `sudo`.
 
 ## Usage
 
